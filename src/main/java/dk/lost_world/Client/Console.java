@@ -16,7 +16,7 @@ public class Console implements Client {
     public int takeTurn(State state) {
         Scanner sc = new Scanner(System.in);
         System.out.println(state);
-        System.out.println("Player ["+this.name+"] turn: ");
+        System.out.println("Player ["+this.name+"] turn (1-6): ");
         while (!sc.hasNextInt()) sc.next();
         return sc.nextInt();
     }

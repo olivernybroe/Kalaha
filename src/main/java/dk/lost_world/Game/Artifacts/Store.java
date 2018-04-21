@@ -6,4 +6,12 @@ public class Store extends Pit {
     public Store(Client owner) {
         this.owner = owner;
     }
+
+    @Override
+    public String toString() {
+        return "Store{" +
+            "seed=" + seed +
+            ", owner=" + owner +
+            '}';
+    }
 }

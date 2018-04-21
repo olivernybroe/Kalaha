@@ -2,7 +2,7 @@ package dk.lost_world.Game.Artifacts;
 
 import dk.lost_world.Client.Client;
 
-public abstract class Pit {
+public abstract class Pit implements Cloneable{
     protected int seed = 0;
     protected Client owner;
 
@@ -34,5 +34,14 @@ public abstract class Pit {
 
     public boolean isEmpty() {
         return this.getSeed() == 0;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 }
