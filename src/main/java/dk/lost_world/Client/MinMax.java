@@ -10,8 +10,12 @@ public class MinMax implements Client {
     @Override
     public int takeTurn(State state) {
         Node minMaxResult = minMax(
-            new Node(state, this),
-            6,
+            new Node(
+                state,
+                this,
+                state.getPlayerA().equals(this) ? state.getPlayerB() : state.getPlayerA()
+            ),
+            7,
             true
         );
 
@@ -22,11 +26,18 @@ public class MinMax implements Client {
         return minMaxResult.pitChosen;
     }
 
+    @Override
+    public int takeExtraTurn(State state) {
+        System.out.println("AI extra turn");
+        return takeTurn(state);
+    }
+
     private static class Node {
         State state;
         int pitChosen;
         Node parent;
         Client me;
+        Client opponent;
 
         public Node() {
         }
@@ -36,17 +47,18 @@ public class MinMax implements Client {
             this.state = new State(state);
         }
 
-        public Node(State state, Client me) {
+        public Node(State state, Client me, Client opponent) {
             this(state);
             this.me = me;
+            this.opponent = opponent;
         }
 
         public Node(State state, Node parent, int pitChosen) {
             this(state);
-            this.state.takeTurn(pitChosen);
             this.parent = parent;
             this.pitChosen = pitChosen;
             this.me = parent.me;
+            this.opponent = parent.opponent;
         }
 
         public boolean isTerminal() {
@@ -105,6 +117,11 @@ public class MinMax implements Client {
             public int getScore() {
                 return Integer.MAX_VALUE;
             }
+
+            @Override
+            public String toString() {
+                return "MAXSCORE";
+            }
         };
     }
 
@@ -119,6 +136,7 @@ public class MinMax implements Client {
             bestValue = minScore();
 
             for (Node child : node.getChildren()) {
+                child.state.takeTurn(child.pitChosen);
                 v = minMax(child, depth -1, false);
                 bestValue = Math.max(bestValue.getScore(), v.getScore()) == bestValue.getScore() ? bestValue : v;
             }
@@ -128,6 +146,7 @@ public class MinMax implements Client {
             bestValue = maxScore();
 
             for (Node child : node.getChildren()) {
+                child.state.takeTurn(child.pitChosen);
                 v = minMax(child, depth -1, true);
                 bestValue = Math.min(bestValue.getScore(), v.getScore()) == bestValue.getScore() ? bestValue : v;
             }

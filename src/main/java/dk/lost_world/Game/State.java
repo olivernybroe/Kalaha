@@ -124,12 +124,6 @@ public class State {
         return !this.isDone();
     }
 
-    public State takeTurn() {
-        return this.takeTurn(
-            this.currentPlayer.takeTurn(this)
-        );
-    }
-
     public boolean isValidNum(int pitNum) {
         // Needs to be a number between 1-6.
         if(pitNum > 6 || pitNum < 1) {
@@ -146,7 +140,14 @@ public class State {
         return !chosenPit.isEmpty();
     }
 
+    public State takeTurn() {
+        return this.takeTurn(
+            this.currentPlayer.takeTurn(this)
+        );
+    }
+
     public State takeTurn(int pitNum) {
+
         // Make player retake the turn if choosing an invalid number.
         if(!isValidNum(pitNum)) {
             return this.takeTurn();
@@ -179,11 +180,17 @@ public class State {
         // If the last sown seed lands in the player's store, the player gets an additional move.
         // There is no limit on the number of moves a player can make in their turn.
         if(currentPit.equals(getCurrentPlayersStore())) {
-            //return this.takeTurn(); // TODO: enable extra turn again.
+            //return this.takeExtraTurn();
         }
 
         this.changeTurn();
         return this;
+    }
+
+    public State takeExtraTurn() {
+        return this.takeTurn(
+            this.currentPlayer.takeExtraTurn(this)
+        );
     }
 
     private void changeTurn() {
@@ -216,6 +223,16 @@ public class State {
 
     public Client getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Client currentPlayer) {
+        if(this.getCurrentPlayer().equals(this.getPlayerA())) {
+            this.playerA = currentPlayer;
+        } else {
+            this.playerB = currentPlayer;
+        }
+        this.getCurrentPlayersStore().setOwner(currentPlayer);
+        this.currentPlayer = currentPlayer;
     }
 
     public Client getPlayerA() {

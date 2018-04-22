@@ -22,6 +22,12 @@ public class Console implements Client {
     }
 
     @Override
+    public int takeExtraTurn(State state) {
+        System.out.println("Extra turn");
+        return takeTurn(state);
+    }
+
+    @Override
     public String toString() {
         return "Console{" +
             "name='" + name + '\'' +

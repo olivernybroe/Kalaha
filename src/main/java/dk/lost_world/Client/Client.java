@@ -6,4 +6,6 @@ import dk.lost_world.Game.State;
 public interface Client {
 
     int takeTurn(State state);
+
+    int takeExtraTurn(State state);
 }

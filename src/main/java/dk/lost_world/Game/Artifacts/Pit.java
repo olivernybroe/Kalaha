@@ -32,6 +32,10 @@ public abstract class Pit implements Cloneable{
         return owner;
     }
 
+    public void setOwner(Client owner) {
+        this.owner = owner;
+    }
+
     public boolean isEmpty() {
         return this.getSeed() == 0;
     }

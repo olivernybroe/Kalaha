@@ -11,4 +11,9 @@ public class RandomAI implements Client {
         System.out.println("Random AI chooses: "+choice);
         return choice;
     }
+
+    @Override
+    public int takeExtraTurn(State state) {
+        return takeTurn(state);
+    }
 }
