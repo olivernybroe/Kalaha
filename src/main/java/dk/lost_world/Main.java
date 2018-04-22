@@ -5,10 +5,7 @@ import dk.lost_world.Client.Console;
 import dk.lost_world.Client.MinMax;
 import dk.lost_world.Client.RandomAI;
 import dk.lost_world.Game.Kalaha;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 
 import java.sql.Time;
 import java.util.concurrent.TimeUnit;
@@ -17,12 +14,31 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Options options = new Options();
-        options.addOption("opponent", true, "Choose which opponent to fight [MinMax, Random, Console]");
-        options.addOption("seeds", true, "Choose amount of seeds the game starts with.");
-        options.addOption("rules", "Get all the rules printed out.");
+        options.addOption("o","opponent", true, "Choose which opponent to fight [MinMax, Random, Console]");
+        options.addOption("s", "seeds", true, "Choose amount of seeds the game starts with.");
+        options.addOption("r","rules", false, "Get all the rules printed out.");
+        options.addOption("h", "help",  false, "Prints the help information.");
+
+        System.out.println("Remember you can use -h to get help on how to start the program.");
+
 
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse( options, args);
+        CommandLine cmd = null;
+        try {
+            // parse the command line arguments
+            cmd = parser.parse( options, args );
+        }
+        catch( ParseException exp ) {
+            // oops, something went wrong
+            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+            System.exit(1);
+        }
+
+        if(cmd.hasOption("help")) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp( "java -jar kalaha.jar", options);
+            System.exit(0);
+        }
 
         if (cmd.hasOption("rules")) {
             printRules();
@@ -48,15 +64,9 @@ public class Main {
      */
     private static void printRules() {
         System.out.println("1. At the beginning of the game, x seeds are placed in each house.");
-        System.out.println("2. Each player controls the six houses and their seeds on the player's side of the board.\n" +
-            "The player's score is the number of seeds in the store to their right.");
-        System.out.println("3. Players take turns sowing their seeds. On a turn, the player removes all seeds from one of the houses\n" +
-            "under their control. Moving counter-clockwise, the player drops one seed in each house in turn,\n" +
-            "including the player's own store but not their opponent's.");
-        System.out.println("4. When one player no longer has any seeds in any of their houses, the game ends.\n" +
-            "The other player moves all remaining seeds to their store,\n" +
-            "and the player with the most seeds in their store wins.");
-
+        System.out.println("2. Each player controls the six houses and their seeds on the player's side of the board. The player's score is the number of seeds in the store to their right.");
+        System.out.println("3. Players take turns sowing their seeds. On a turn, the player removes all seeds from one of the houses under their control. Moving counter-clockwise, the player drops one seed in each house in turn, including the player's own store but not their opponent's.");
+        System.out.println("4. When one player no longer has any seeds in any of their houses, the game ends. The other player moves all remaining seeds to their store, and the player with the most seeds in their store wins.");
     }
 
     private static int getSeeds(CommandLine cmd) {
