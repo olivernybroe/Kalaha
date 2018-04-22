@@ -4,17 +4,19 @@ import dk.lost_world.Client.Client;
 
 public class Kalaha {
 
+    private final int seeds;
     private Client playerA;
     private Client playerB;
     private State winnerState;
 
-    public Kalaha(Client playerA, Client playerB) {
+    public Kalaha(Client playerA, Client playerB, int seeds) {
         this.playerA = playerA;
         this.playerB = playerB;
+        this.seeds = seeds;
     }
 
     protected State initializeState() {
-        return new State(4, playerA, playerB);
+        return new State(this.seeds, playerA, playerB);
     }
 
     public void start() {
