@@ -12,8 +12,4 @@ public class RandomAI implements Client {
         return choice;
     }
 
-    @Override
-    public int takeExtraTurn(State state) {
-        return takeTurn(state);
-    }
 }

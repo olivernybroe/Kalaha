@@ -14,17 +14,14 @@ public class Console implements Client {
 
     @Override
     public int takeTurn(State state) {
+        if(state.isExtraTurn()) {
+            System.out.println("Extra turn");
+        }
         Scanner sc = new Scanner(System.in);
         System.out.println(state);
         System.out.println("Player ["+this.name+"] turn (1-6): ");
         while (!sc.hasNextInt()) sc.next();
         return sc.nextInt();
-    }
-
-    @Override
-    public int takeExtraTurn(State state) {
-        System.out.println("Extra turn");
-        return takeTurn(state);
     }
 
     @Override

@@ -38,6 +38,7 @@ public class State {
     private Client playerA;
     private Client playerB;
     private Client firstPlayer;
+    private boolean extraTurn = false;
 
     public State(int seeds, Client playerA, Client playerB) {
         this.pits = Arrays.asList(
@@ -113,7 +114,7 @@ public class State {
         return this.playerAHasWon() ? this.playerA : this.playerB;
     }
 
-    private boolean playerHasWon(Client client) {
+    public boolean playerHasWon(Client client) {
         return client.equals(this.currentPlayer) ?
             this.getCurrentPlayersStore().getSeed() > this.getOpponentsStore().getSeed() :
             this.getCurrentPlayersStore().getSeed() < this.getOpponentsStore().getSeed();
@@ -147,10 +148,12 @@ public class State {
     }
 
     public State takeTurn(int pitNum) {
+        this.extraTurn = false;
 
         // Make player retake the turn if choosing an invalid number.
         if(!isValidNum(pitNum)) {
-            return this.takeTurn();
+            return this;
+            //return this.takeTurn();
         }
 
         Pit currentPit = this.pits.get(
@@ -180,17 +183,16 @@ public class State {
         // If the last sown seed lands in the player's store, the player gets an additional move.
         // There is no limit on the number of moves a player can make in their turn.
         if(currentPit.equals(getCurrentPlayersStore())) {
-            //return this.takeExtraTurn();
+            this.extraTurn = true;
+            return this;
         }
 
         this.changeTurn();
         return this;
     }
 
-    public State takeExtraTurn() {
-        return this.takeTurn(
-            this.currentPlayer.takeExtraTurn(this)
-        );
+    public boolean isExtraTurn() {
+        return extraTurn;
     }
 
     private void changeTurn() {

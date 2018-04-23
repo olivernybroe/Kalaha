@@ -7,15 +7,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MinMax implements Client {
+    int depth;
+
+    public MinMax(int depth) {
+        this.depth = depth;
+    }
+
     @Override
     public int takeTurn(State state) {
+        System.out.println(state);
         Node minMaxResult = minMax(
             new Node(
                 state,
                 this,
                 state.getPlayerA().equals(this) ? state.getPlayerB() : state.getPlayerA()
             ),
-            7,
+            this.depth,
             true
         );
 
@@ -26,13 +33,7 @@ public class MinMax implements Client {
         return minMaxResult.pitChosen;
     }
 
-    @Override
-    public int takeExtraTurn(State state) {
-        System.out.println("AI extra turn");
-        return takeTurn(state);
-    }
-
-    private static class Node {
+    public static class Node {
         State state;
         int pitChosen;
         Node parent;
@@ -137,7 +138,12 @@ public class MinMax implements Client {
 
             for (Node child : node.getChildren()) {
                 child.state.takeTurn(child.pitChosen);
-                v = minMax(child, depth -1, false);
+                if(child.state.isExtraTurn()) {
+                    v = minMax(child, depth -1, true);
+                }
+                else {
+                    v = minMax(child, depth -1, false);
+                }
                 bestValue = Math.max(bestValue.getScore(), v.getScore()) == bestValue.getScore() ? bestValue : v;
             }
             return bestValue;
@@ -147,7 +153,12 @@ public class MinMax implements Client {
 
             for (Node child : node.getChildren()) {
                 child.state.takeTurn(child.pitChosen);
-                v = minMax(child, depth -1, true);
+                if(child.state.isExtraTurn()) {
+                    v = minMax(child, depth -1, false);
+                }
+                else {
+                    v = minMax(child, depth -1, true);
+                }
                 bestValue = Math.min(bestValue.getScore(), v.getScore()) == bestValue.getScore() ? bestValue : v;
             }
             return bestValue;
