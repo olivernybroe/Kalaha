@@ -5,13 +5,15 @@ import dk.lost_world.Game.State;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import static dk.lost_world.Client.MinMax.maxScore;
 import static dk.lost_world.Client.MinMax.minScore;
 
 public class AlphaBeta implements Client {
-    int depth;
-    Stack<Integer> tempMoves = new Stack<>();
+    private int depth;
+    private Stack<Integer> tempMoves = new Stack<>();
 
     public AlphaBeta(int depth) {
         this.depth = depth;
@@ -21,12 +23,20 @@ public class AlphaBeta implements Client {
     public int takeTurn(State state) {
         System.out.println(state);
         if(state.isExtraTurn()) {
+            try {
+                TimeUnit.SECONDS.sleep(1); // Add sleep so it doesn't explode terminal
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("AlphaBeta chooses: "+tempMoves.peek());
             return tempMoves.pop();
         }
         else {
+            System.out.println("AlphaBeta is calculating...");
             tempMoves.empty();
         }
+        long startTime = System.nanoTime();
+
         Node minMaxResult = alphaBeta(
             new Node(
                 state,
@@ -44,6 +54,12 @@ public class AlphaBeta implements Client {
             minMaxResult = minMaxResult.parent;
             tempMoves.push(minMaxResult.pitChosen);
         }
+
+        long endTime = System.nanoTime();
+
+        long duration = ((endTime - startTime) / 1000000) / 1000;
+        System.out.println("Took "+duration+"s to calculate");
+
         System.out.println("AlphaBeta chooses: "+minMaxResult.pitChosen);
         return tempMoves.pop();
     }
@@ -60,7 +76,7 @@ public class AlphaBeta implements Client {
                 child.state.takeTurn(child.pitChosen);
 
                 if(child.state.isExtraTurn()) {
-                    temp = alphaBeta(child, depth,a, b, true);
+                    temp = alphaBeta(child, depth -1,a, b, true);
                 }
                 else {
                     temp = alphaBeta(child, depth -1, a, b, false);
@@ -80,10 +96,10 @@ public class AlphaBeta implements Client {
                 child.state.takeTurn(child.pitChosen);
 
                 if(child.state.isExtraTurn()) {
-                    temp = alphaBeta(child, depth -1,a, b, true);
+                    temp = alphaBeta(child, depth -1,a, b, false);
                 }
                 else {
-                    temp = alphaBeta(child, depth -1, a, b, false);
+                    temp = alphaBeta(child, depth -1, a, b, true);
                 }
 
                 v = Math.min(v.getScore(), temp.getScore()) == temp.getScore() ? temp : v;
