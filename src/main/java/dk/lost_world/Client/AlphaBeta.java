@@ -43,7 +43,7 @@ public class AlphaBeta implements Client {
                 this,
                 state.getPlayerA().equals(this) ? state.getPlayerB() : state.getPlayerA()
             ),
-            8,
+            depth,
             minScore(),
             maxScore(),
             true
@@ -65,7 +65,7 @@ public class AlphaBeta implements Client {
     }
 
     private Node alphaBeta(Node node, int depth, Node a, Node b, boolean maximizingPlayer) {
-        if(depth == 0 || node.isTerminal()) {
+        if(depth <= 0 || node.isTerminal()) {
             return node;
         }
 
@@ -76,10 +76,10 @@ public class AlphaBeta implements Client {
                 child.state.takeTurn(child.pitChosen);
 
                 if(child.state.isExtraTurn()) {
-                    temp = alphaBeta(child, depth -1,a, b, true);
+                    temp = alphaBeta(child, depth,a, b, true);
                 }
                 else {
-                    temp = alphaBeta(child, depth -1, a, b, false);
+                    temp = alphaBeta(child, depth-1, a, b, false);
                 }
 
                 v = Math.max(v.getScore(), temp.getScore()) == temp.getScore() ? temp : v;
@@ -96,10 +96,10 @@ public class AlphaBeta implements Client {
                 child.state.takeTurn(child.pitChosen);
 
                 if(child.state.isExtraTurn()) {
-                    temp = alphaBeta(child, depth -1,a, b, false);
+                    temp = alphaBeta(child, depth,a, b, false);
                 }
                 else {
-                    temp = alphaBeta(child, depth -1, a, b, true);
+                    temp = alphaBeta(child, depth-1, a, b, true);
                 }
 
                 v = Math.min(v.getScore(), temp.getScore()) == temp.getScore() ? temp : v;
@@ -114,6 +114,6 @@ public class AlphaBeta implements Client {
 
     @Override
     public String toString() {
-        return "AlphaBeta{}";
+        return "AlphaBeta";
     }
 }

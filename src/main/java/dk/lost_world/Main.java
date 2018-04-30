@@ -12,7 +12,7 @@ public class Main {
         options.addOption("s", "seeds", true, "Choose amount of seeds the game starts with.");
         options.addOption("r","rules", false, "Get all the rules printed out.");
         options.addOption("h", "help",  false, "Prints the help information.");
-        options.addOption("d", "depth", true, "Choose the depth of the search algorithm. DEFAULT=8");
+        options.addOption("d", "depth", true, "Choose the depth of the search algorithm. DEFAULT=6");
         options.addOption("n", "name", true, "Choose your player name.");
 
         System.out.println("Remember you can use -h to get help on how to start the program.");
@@ -81,9 +81,9 @@ public class Main {
     }
 
     private static int getDepth(CommandLine cmd) {
-        String value = cmd.getOptionValue("depth", "8");
+        String value = cmd.getOptionValue("depth", "6");
 
-        int depth = 8;
+        int depth = 6;
         try {
             depth = Integer.parseInt(value);
             System.out.println("["+depth+"] depths has ben chosen.");
