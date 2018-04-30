@@ -14,7 +14,7 @@ This is the traditional Kalaha game, where you can play against an AlphaBeta, Mi
 The supported arguments for the game are
 ```
 usage: java -jar kalaha.jar
- -d,--depth <arg>      Choose the depth of the search algorithm. DEFAULT=8
+ -d,--depth <arg>      Choose the depth of the search algorithm. DEFAULT=6
  -h,--help             Prints the help information.
  -n,--name <arg>       Choose your player name.
  -o,--opponent <arg>   Choose which opponent to fight [MinMax, Random,

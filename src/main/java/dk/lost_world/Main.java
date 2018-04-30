@@ -89,7 +89,7 @@ public class Main {
             System.out.println("["+depth+"] depths has ben chosen.");
         }
         catch (NumberFormatException e) {
-            System.out.println("Couldn't parse the input for depth, has to be an int, setting to default 8.");
+            System.out.println("Couldn't parse the input for depth, has to be an int, setting to default 6.");
         }
         return depth;
     }
