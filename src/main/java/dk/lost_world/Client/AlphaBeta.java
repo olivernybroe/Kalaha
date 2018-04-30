@@ -3,11 +3,15 @@ package dk.lost_world.Client;
 import dk.lost_world.Client.MinMax.Node;
 import dk.lost_world.Game.State;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 import static dk.lost_world.Client.MinMax.maxScore;
 import static dk.lost_world.Client.MinMax.minScore;
 
 public class AlphaBeta implements Client {
     int depth;
+    Stack<Integer> tempMoves = new Stack<>();
 
     public AlphaBeta(int depth) {
         this.depth = depth;
@@ -16,6 +20,13 @@ public class AlphaBeta implements Client {
     @Override
     public int takeTurn(State state) {
         System.out.println(state);
+        if(state.isExtraTurn()) {
+            System.out.println("AlphaBeta chooses: "+tempMoves.peek());
+            return tempMoves.pop();
+        }
+        else {
+            tempMoves.empty();
+        }
         Node minMaxResult = alphaBeta(
             new Node(
                 state,
@@ -27,12 +38,14 @@ public class AlphaBeta implements Client {
             maxScore(),
             true
         );
+        tempMoves.push(minMaxResult.pitChosen);
 
         while (minMaxResult.parent != null && minMaxResult.parent.pitChosen != 0) {
             minMaxResult = minMaxResult.parent;
+            tempMoves.push(minMaxResult.pitChosen);
         }
         System.out.println("AlphaBeta chooses: "+minMaxResult.pitChosen);
-        return minMaxResult.pitChosen;
+        return tempMoves.pop();
     }
 
     private Node alphaBeta(Node node, int depth, Node a, Node b, boolean maximizingPlayer) {
@@ -47,7 +60,7 @@ public class AlphaBeta implements Client {
                 child.state.takeTurn(child.pitChosen);
 
                 if(child.state.isExtraTurn()) {
-                    temp = alphaBeta(child, depth -1,a, b, true);
+                    temp = alphaBeta(child, depth,a, b, true);
                 }
                 else {
                     temp = alphaBeta(child, depth -1, a, b, false);
