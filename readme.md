@@ -5,7 +5,7 @@ This is the traditional Kalaha game, where you can play against an AlphaBeta, Mi
 
 ### Usage
 - Download the latest release
-- Run the program with `java -jar kalaha.jar` and apply the arguments you wish to run with, `-h` for help. (eg. `java -jar kalaha.jar -o AlphaBeta -s 4 -d 8`)
+- Run the program with `java -jar kalaha.jar` and apply the arguments you wish to run with, `-h` for help. (eg. `java -jar kalaha.jar -o AlphaBeta -s 4 -d 6`)
 - If this is your first time playing run `java -jar kalaha.jar --rules`, to get the rules of the game.
 - Play and have fun!
 
